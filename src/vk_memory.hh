@@ -1,0 +1,70 @@
+// Copyright Nezametdinov E. Ildus 2023.
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or copy at
+// https://www.boost.org/LICENSE_1_0.txt)
+//
+#ifndef H_C49A5BD062324AC88C126F859E3F6076
+#define H_C49A5BD062324AC88C126F859E3F6076
+
+#include "vk_device.hh"
+
+namespace sgc::vk {
+
+////////////////////////////////////////////////////////////////////////////////
+// Vulkan memory definition.
+////////////////////////////////////////////////////////////////////////////////
+
+struct memory : resource<VkDeviceMemory, vkFreeMemory> {
+    using resource::resource;
+};
+
+////////////////////////////////////////////////////////////////////////////////
+// Vulkan memory allocation parameters definition.
+////////////////////////////////////////////////////////////////////////////////
+
+struct memory_allocation_parameters {
+    VkMemoryRequirements requirements;
+    VkMemoryPropertyFlags property_flags;
+};
+
+////////////////////////////////////////////////////////////////////////////////
+// Vulkan memory read operation parameters definition.
+////////////////////////////////////////////////////////////////////////////////
+
+struct memory_read_operation_parameters {
+    VkDeviceSize offset;
+    std::span<std::byte> bytes;
+};
+
+////////////////////////////////////////////////////////////////////////////////
+// Vulkan memory write operation parameters definition.
+////////////////////////////////////////////////////////////////////////////////
+
+struct memory_write_operation_parameters {
+    VkDeviceSize offset;
+    std::span<std::byte const> bytes;
+};
+
+////////////////////////////////////////////////////////////////////////////////
+// Allocation interface.
+////////////////////////////////////////////////////////////////////////////////
+
+auto
+allocate(device const& device, memory_allocation_parameters params)
+    -> std::expected<memory, error>;
+
+////////////////////////////////////////////////////////////////////////////////
+// Data transmission interface.
+////////////////////////////////////////////////////////////////////////////////
+
+auto
+read(memory const& memory, memory_read_operation_parameters params)
+    -> std::expected<void, error>;
+
+auto
+write(memory const& memory, memory_write_operation_parameters params)
+    -> std::expected<void, error>;
+
+} // namespace sgc::vk
+
+#endif // H_C49A5BD062324AC88C126F859E3F6076

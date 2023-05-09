@@ -1,0 +1,47 @@
+// Copyright Nezametdinov E. Ildus 2023.
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or copy at
+// https://www.boost.org/LICENSE_1_0.txt)
+//
+#ifndef H_F8970A81FD5E4192AA75D8B15DC920CE
+#define H_F8970A81FD5E4192AA75D8B15DC920CE
+
+#include "vk_resource.hh"
+#include "vk_utility.hh"
+
+namespace sgc::vk {
+
+////////////////////////////////////////////////////////////////////////////////
+// Vulkan shader module definition.
+////////////////////////////////////////////////////////////////////////////////
+
+struct shader_module : resource<VkShaderModule, vkDestroyShaderModule> {
+    using resource::resource;
+};
+
+////////////////////////////////////////////////////////////////////////////////
+// Vulkan shader code definition.
+////////////////////////////////////////////////////////////////////////////////
+
+using shader_code = std::span<uint32_t const>;
+
+////////////////////////////////////////////////////////////////////////////////
+// Vulkan shader module initialization parameters definition.
+////////////////////////////////////////////////////////////////////////////////
+
+struct shader_module_parameters {
+    VkShaderModuleCreateFlags flags;
+    shader_code code;
+};
+
+////////////////////////////////////////////////////////////////////////////////
+// Initialization interface.
+////////////////////////////////////////////////////////////////////////////////
+
+auto
+initialize(VkDevice device, shader_module_parameters params)
+    -> std::expected<shader_module, error>;
+
+} // namespace sgc::vk
+
+#endif // H_F8970A81FD5E4192AA75D8B15DC920CE
