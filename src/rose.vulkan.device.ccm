@@ -4,17 +4,7 @@
 // https://www.boost.org/LICENSE_1_0.txt)
 //
 module; // Global module fragment.
-
-#include <algorithm>
-#include <expected>
-#include <utility>
-#include <span>
-
-#include <string_view>
-#include <vector>
-
-#include <stddef.h>
-#include <stdint.h>
+#include <everything>
 #include <vulkan/vulkan.h>
 
 export module rose.vulkan.device;
@@ -174,16 +164,16 @@ initialize(physical_device parent, device_parameters parameters) noexcept
              .queueCount = 1,
              .pQueuePriorities = &priority}};
 
-        // Count the number of unique family indices.
-        auto n_queue_families = uint32_t{};
+        // Count the unique family indices.
+        auto queue_family_count = uint32_t{};
         if(auto idx_prev = uint32_t{0xFFFFFFFF}; true) {
             for(auto family_idx : queue_family_indices) {
                 if(idx_prev == family_idx) {
                     continue;
                 }
 
-                device_queue_create_infos[n_queue_families++].queueFamilyIndex =
-                    idx_prev = family_idx;
+                device_queue_create_infos[queue_family_count++]
+                    .queueFamilyIndex = idx_prev = family_idx;
             }
         }
 
@@ -191,7 +181,7 @@ initialize(physical_device parent, device_parameters parameters) noexcept
         auto info = VkDeviceCreateInfo{
             .sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO,
             .pNext = &(parameters.features),
-            .queueCreateInfoCount = n_queue_families,
+            .queueCreateInfoCount = queue_family_count,
             .pQueueCreateInfos = device_queue_create_infos,
             .enabledExtensionCount = size(parameters.extensions),
             .ppEnabledExtensionNames = data(parameters.extensions)};

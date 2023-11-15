@@ -3,25 +3,10 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // https://www.boost.org/LICENSE_1_0.txt)
 //
-#include <expected>
-#include <utility>
-#include <span>
-
-#include <chrono>
-#include <memory>
-#include <thread>
-#include <iostream>
-
-#include <array>
-#include <string_view>
-#include <vector>
-
-#include <stddef.h>
-#include <stdint.h>
-#include <vulkan/vulkan.h>
-
+#include <everything>
 #include <SDL.h>
 #include <SDL_vulkan.h>
+#include <vulkan/vulkan.h>
 
 import rose.vulkan.device;
 import rose.vulkan.swapchain;
@@ -377,8 +362,8 @@ initialize_main_context(SDL_Window* window)
                 context.surface_properties.capabilities.currentTransform,
             .image_usage_flags = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT |
                                  VK_IMAGE_USAGE_TRANSFER_DST_BIT,
-            .n_images = 3,
-            .n_image_array_layers = 1};
+            .image_count = 3,
+            .image_array_layer_count = 1};
 
         // Select image format.
         context.swapchain_parameters.surface_format =

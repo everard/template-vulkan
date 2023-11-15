@@ -4,20 +4,10 @@
 // https://www.boost.org/LICENSE_1_0.txt)
 //
 module; // Global module fragment.
-
-#include <expected>
-#include <utility>
-#include <span>
-
-#include <string_view>
-#include <vector>
-
-#include <stddef.h>
-#include <stdint.h>
-#include <vulkan/vulkan.h>
-
+#include <everything>
 #include <SDL.h>
 #include <SDL_vulkan.h>
+#include <vulkan/vulkan.h>
 
 export module rose.vulkan.swapchain;
 export import rose.vulkan.kernel;
@@ -171,8 +161,8 @@ struct swapchain_parameters {
     VkImageUsageFlags image_usage_flags;
 
     // Number of images in swapchain, and number of views in multiview surface.
-    uint32_t n_images;
-    uint32_t n_image_array_layers;
+    uint32_t image_count;
+    uint32_t image_array_layer_count;
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -192,11 +182,11 @@ initialize(swapchain swapchain_old, swapchain_parameters parameters) noexcept
         vkCreateSwapchainKHR, swapchain_old.parent,
         {.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR,
          .surface = parameters.surface,
-         .minImageCount = parameters.n_images,
+         .minImageCount = parameters.image_count,
          .imageFormat = parameters.surface_format.format,
          .imageColorSpace = parameters.surface_format.colorSpace,
          .imageExtent = parameters.image_extent,
-         .imageArrayLayers = parameters.n_image_array_layers,
+         .imageArrayLayers = parameters.image_array_layer_count,
          .imageUsage = parameters.image_usage_flags,
          .imageSharingMode = VK_SHARING_MODE_EXCLUSIVE,
          .preTransform = parameters.surface_transform,

@@ -21,7 +21,7 @@ CFLAGS_MODULE =\
 CFLAGS =\
  -stdlib=libc++\
  -Wall -Wextra -Wno-missing-field-initializers -O2 -std=c++2b --pedantic\
- -fprebuilt-module-path=$(BUILD_DIR)\
+ -fprebuilt-module-path=$(BUILD_DIR) -Isrc\
  $(shell pkg-config --cflags sdl2)\
  $(shell pkg-config --cflags vulkan)
 

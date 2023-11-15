@@ -4,14 +4,7 @@
 // https://www.boost.org/LICENSE_1_0.txt)
 //
 module; // Global module fragment.
-
-#include <algorithm>
-#include <expected>
-#include <utility>
-#include <span>
-
-#include <stddef.h>
-#include <stdint.h>
+#include <everything>
 #include <vulkan/vulkan.h>
 
 export module rose.vulkan.memory;
@@ -122,6 +115,7 @@ read(memory_chunk source, std::span<std::byte> target) noexcept
     // Make sure the memory is unmapped upon return from this function.
     struct guard {
         ~guard() {
+            // Unmap the memory.
             vkUnmapMemory(chunk.device, chunk.memory);
         }
 
@@ -163,6 +157,7 @@ write(memory_chunk target, std::span<std::byte const> source) noexcept
     // Make sure the memory is unmapped upon return from this function.
     struct guard {
         ~guard() {
+            // Unmap the memory.
             vkUnmapMemory(chunk.device, chunk.memory);
         }
 

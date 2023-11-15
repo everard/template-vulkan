@@ -4,16 +4,7 @@
 // https://www.boost.org/LICENSE_1_0.txt)
 //
 module; // Global module fragment.
-
-#include <expected>
-#include <utility>
-#include <span>
-
-#include <string_view>
-#include <vector>
-
-#include <stddef.h>
-#include <stdint.h>
+#include <everything>
 #include <vulkan/vulkan.h>
 
 export module rose.vulkan.kernel;
@@ -182,12 +173,13 @@ struct resource {
     Handle handle;
 };
 
-// Define common resource template with Vulkan device as parent.
+////////////////////////////////////////////////////////////////////////////////
+// Vulkan device resource definition.
+////////////////////////////////////////////////////////////////////////////////
+
 template <typename Handle,
           void Deleter(VkDevice, Handle, VkAllocationCallbacks const*)>
-struct device_resource : resource<VkDevice, Handle, Deleter> {
-    using resource<VkDevice, Handle, Deleter>::resource;
-};
+using device_resource = resource<VkDevice, Handle, Deleter>;
 
 ////////////////////////////////////////////////////////////////////////////////
 // Vulkan resource parent and handle type definitions.
@@ -217,8 +209,6 @@ auto
 initialize(resource_initializer<Resource, Info> initializer,
            resource_parent<Resource> parent, Info info) noexcept
     -> std::expected<Resource, error> {
-    // Initialize a new resource using the given initializer function and
-    // initialization info.
     auto result = Resource{parent};
     if(auto code = initializer(parent, &info, nullptr, &result.handle);
        code == VK_SUCCESS) {
