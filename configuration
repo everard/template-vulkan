@@ -1,0 +1,6 @@
+library:sdl2
+library:vulkan
+program:main = rose.vulkan.device rose.vulkan.swapchain
+module:rose.vulkan.device = rose.vulkan.kernel
+module:rose.vulkan.memory = rose.vulkan.device
+module:rose.vulkan.swapchain = rose.vulkan.kernel
