@@ -122,12 +122,12 @@ construct_command_buffers(main_context& context) -> std::expected<void, error> {
 
     for(auto i = 0zU; auto command_buffer : command_buffers) {
         // Initialize image sub-resource range.
-        auto image_subresource_range =
-            VkImageSubresourceRange{.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT,
-                                    .baseMipLevel = 0,
-                                    .levelCount = 1,
-                                    .baseArrayLayer = 0,
-                                    .layerCount = 1};
+        auto image_subresource_range = VkImageSubresourceRange{
+            .aspectMask = VK_IMAGE_ASPECT_COLOR_BIT,
+            .baseMipLevel = 0,
+            .levelCount = 1,
+            .baseArrayLayer = 0,
+            .layerCount = 1};
 
         // Begin recording.
         if(true) {
@@ -223,16 +223,17 @@ initialize_swapchain(main_context& context) -> std::expected<void, error> {
     context.swapchain_images.clear();
 
     // Update swapchain parameters.
-    if(auto w = 0, h = 0; true) {
-        if(SDL_GetWindowSize(context.window, &w, &h); (w <= 0) || (h <= 0)) {
+    if(auto width = 0, height = 0; true) {
+        if(SDL_GetWindowSize(context.window, &width, &height);
+           (width <= 0) || (height <= 0)) {
             return std::unexpected{error{.line = __LINE__}};
         }
 
         context.swapchain_parameters.image_extent.width =
-            static_cast<uint32_t>(w);
+            static_cast<uint32_t>(width);
 
         context.swapchain_parameters.image_extent.height =
-            static_cast<uint32_t>(h);
+            static_cast<uint32_t>(height);
     }
 
     // Initialize the swapchain.
@@ -286,11 +287,11 @@ initialize_main_context(SDL_Window* window)
 
     // Select physical device.
     if(true) {
-        auto object = //
-            select(context.instance,
-                   vulkan::physical_device_preference{
-                       .api_version = VK_API_VERSION_1_3,
-                       .type = VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU});
+        auto object = select(
+            context.instance,
+            vulkan::physical_device_preference{
+                .api_version = VK_API_VERSION_1_3,
+                .type = VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU});
 
         if(!object) {
             return std::unexpected{
@@ -391,9 +392,10 @@ initialize_main_context(SDL_Window* window)
     if(true) {
         auto object = initialize(
             context.physical_device,
-            vulkan::device_parameters{.extensions = obtain_device_extensions(),
-                                      .features = features,
-                                      .surface = context.surface});
+            vulkan::device_parameters{
+                .extensions = obtain_device_extensions(),
+                .features = features,
+                .surface = context.surface});
 
         if(!object) {
             return std::unexpected{
@@ -472,17 +474,18 @@ initialize_main_context(SDL_Window* window)
 
 void
 render(main_context& context) {
-    if(auto w = 0, h = 0; true) {
-        if(SDL_GetWindowSize(context.window, &w, &h); (w <= 0) || (h <= 0)) {
+    if(auto width = 0, height = 0; true) {
+        if(SDL_GetWindowSize(context.window, &width, &height);
+           (width <= 0) || (height <= 0)) {
             return;
         }
     }
 
     // Acquire the next swapchain image.
-    auto image_idx = uint32_t{};
-    if(vkAcquireNextImageKHR( //
+    auto image_index = uint32_t{};
+    if(vkAcquireNextImageKHR(
            context.device, context.swapchain, UINT64_MAX,
-           context.semaphores.swapchain, nullptr, &image_idx) != VK_SUCCESS) {
+           context.semaphores.swapchain, nullptr, &image_index) != VK_SUCCESS) {
         return;
     }
 
@@ -497,7 +500,7 @@ render(main_context& context) {
             .pWaitSemaphores = &(context.semaphores.swapchain.handle),
             .pWaitDstStageMask = pipeline_stage_flags,
             .commandBufferCount = 1,
-            .pCommandBuffers = &(context.command_buffers[image_idx]),
+            .pCommandBuffers = &(context.command_buffers[image_index]),
             .signalSemaphoreCount = 1,
             .pSignalSemaphores = &(context.semaphores.rendering.handle)};
 
@@ -515,7 +518,7 @@ render(main_context& context) {
             .pWaitSemaphores = &(context.semaphores.rendering.handle),
             .swapchainCount = 1,
             .pSwapchains = &(context.swapchain.handle),
-            .pImageIndices = &image_idx};
+            .pImageIndices = &image_index};
 
         vkQueuePresentKHR(context.device_queues.presentation, &info);
     }

@@ -166,14 +166,14 @@ initialize(physical_device parent, device_parameters parameters) noexcept
 
         // Count the unique family indices.
         auto queue_family_count = uint32_t{};
-        if(auto idx_prev = uint32_t{0xFFFFFFFF}; true) {
-            for(auto family_idx : queue_family_indices) {
-                if(idx_prev == family_idx) {
+        if(auto previous = uint32_t{0xFFFFFFFF}; true) {
+            for(auto i : queue_family_indices) {
+                if(previous == i) {
                     continue;
                 }
 
                 device_queue_create_infos[queue_family_count++]
-                    .queueFamilyIndex = idx_prev = family_idx;
+                    .queueFamilyIndex = previous = i;
             }
         }
 

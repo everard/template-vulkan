@@ -115,8 +115,9 @@ export namespace rose::vulkan {
 // Vulkan resource definition.
 ////////////////////////////////////////////////////////////////////////////////
 
-template <typename Parent, typename Handle,
-          void Deleter(Parent, Handle, VkAllocationCallbacks const*)>
+template <
+    typename Parent, typename Handle,
+    void Deleter(Parent, Handle, VkAllocationCallbacks const*)>
 struct resource {
     ////////////////////////////////////////////////////////////////////////////
     // Parent and handle type definitions.
@@ -177,8 +178,9 @@ struct resource {
 // Vulkan device resource definition.
 ////////////////////////////////////////////////////////////////////////////////
 
-template <typename Handle,
-          void Deleter(VkDevice, Handle, VkAllocationCallbacks const*)>
+template <
+    typename Handle,
+    void Deleter(VkDevice, Handle, VkAllocationCallbacks const*)>
 using device_resource = resource<VkDevice, Handle, Deleter>;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -206,8 +208,9 @@ using resource_initializer = VkResult( //
 
 template <typename Resource, typename Info>
 auto
-initialize(resource_initializer<Resource, Info> initializer,
-           resource_parent<Resource> parent, Info info) noexcept
+initialize(
+    resource_initializer<Resource, Info> initializer,
+    resource_parent<Resource> parent, Info info) noexcept
     -> std::expected<Resource, error> {
     auto result = Resource{parent};
     if(auto code = initializer(parent, &info, nullptr, &result.handle);
@@ -254,9 +257,9 @@ auto
 initialize(instance_parameters parameters) noexcept
     -> std::expected<instance, error> {
     // Initialize application info.
-    auto info_application =
-        VkApplicationInfo{.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO,
-                          .apiVersion = parameters.api_version};
+    auto info_application = VkApplicationInfo{
+        .sType = VK_STRUCTURE_TYPE_APPLICATION_INFO,
+        .apiVersion = parameters.api_version};
 
     // Initialize instance creation info.
     auto info = VkInstanceCreateInfo{

@@ -123,11 +123,11 @@ read(memory_chunk source, std::span<std::byte> target) noexcept
     } _{.chunk = source};
 
     // Invalidate the mapped memory range.
-    auto range =
-        VkMappedMemoryRange{.sType = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE,
-                            .memory = source.memory,
-                            .offset = source.offset,
-                            .size = target.size()};
+    auto range = VkMappedMemoryRange{
+        .sType = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE,
+        .memory = source.memory,
+        .offset = source.offset,
+        .size = target.size()};
 
     if(auto code = vkInvalidateMappedMemoryRanges(source.device, 1, &range);
        code != VK_SUCCESS) {
@@ -168,11 +168,11 @@ write(memory_chunk target, std::span<std::byte const> source) noexcept
     std::ranges::copy(source, static_cast<std::byte*>(mapped));
 
     // Flush the written memory range.
-    auto range =
-        VkMappedMemoryRange{.sType = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE,
-                            .memory = target.memory,
-                            .offset = target.offset,
-                            .size = source.size()};
+    auto range = VkMappedMemoryRange{
+        .sType = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE,
+        .memory = target.memory,
+        .offset = target.offset,
+        .size = source.size()};
 
     if(auto code = vkFlushMappedMemoryRanges(target.device, 1, &range);
        code != VK_SUCCESS) {
