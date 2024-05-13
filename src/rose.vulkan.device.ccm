@@ -143,10 +143,10 @@ initialize(physical_device parent, device_parameters parameters) noexcept
     // Create a new device.
     if(true) {
         // Pack queue family indices in an array.
-        uint32_t queue_family_indices[] = //
-            {result.queue_family_index.compute,
-             result.queue_family_index.graphics,
-             result.queue_family_index.presentation};
+        uint32_t queue_family_indices[] = {
+            result.queue_family_index.compute,
+            result.queue_family_index.graphics,
+            result.queue_family_index.presentation};
 
         // Sort the array.
         std::ranges::sort(queue_family_indices);

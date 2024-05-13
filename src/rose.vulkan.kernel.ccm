@@ -198,7 +198,7 @@ using resource_handle = typename Resource::handle_type;
 ////////////////////////////////////////////////////////////////////////////////
 
 template <typename Resource, typename Info>
-using resource_initializer = VkResult( //
+using resource_initializer = VkResult(
     resource_parent<Resource>, Info const*, VkAllocationCallbacks const*,
     resource_handle<Resource>*);
 

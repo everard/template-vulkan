@@ -169,7 +169,7 @@ construct_command_buffers(main_context& context) -> std::expected<void, error> {
         // Clear the image.
         if(auto color = VkClearColorValue{.float32 = {0.5f, 0.5f, 0.1f, 1.0f}};
            true) {
-            vkCmdClearColorImage( //
+            vkCmdClearColorImage(
                 command_buffer, context.swapchain_images[i],
                 VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, &color, 1,
                 &image_subresource_range);
@@ -429,12 +429,10 @@ initialize_main_context(SDL_Window* window)
 
     // Initialize command pool.
     if(true) {
-        auto object = //
-            initialize<vulkan::command_pool>(
-                vkCreateCommandPool, context.device,
-                {.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO,
-                 .queueFamilyIndex =
-                     context.device.queue_family_index.graphics});
+        auto object = initialize<vulkan::command_pool>(
+            vkCreateCommandPool, context.device,
+            {.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO,
+             .queueFamilyIndex = context.device.queue_family_index.graphics});
 
         if(!object) {
             return std::unexpected{

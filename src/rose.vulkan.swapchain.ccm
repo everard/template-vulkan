@@ -94,8 +94,8 @@ obtain_properties(surface const& surface, VkPhysicalDevice device) noexcept
 
     // Obtain the list of supported formats.
     if(auto n = uint32_t{}; true) {
-        try_(vkGetPhysicalDeviceSurfaceFormatsKHR( //
-            device, surface, &n, nullptr));
+        try_(
+            vkGetPhysicalDeviceSurfaceFormatsKHR(device, surface, &n, nullptr));
 
         try {
             result.formats.resize(n);

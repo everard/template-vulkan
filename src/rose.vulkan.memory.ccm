@@ -105,7 +105,7 @@ read(memory_chunk source, std::span<std::byte> target) noexcept
     -> std::expected<void, error> {
     // Map the memory.
     void* mapped = nullptr;
-    if(auto code = vkMapMemory( //
+    if(auto code = vkMapMemory(
            source.device, source.memory, source.offset, target.size(), 0,
            &mapped);
        code != VK_SUCCESS) {
@@ -147,7 +147,7 @@ write(memory_chunk target, std::span<std::byte const> source) noexcept
     -> std::expected<void, error> {
     // Map the memory.
     void* mapped = nullptr;
-    if(auto code = vkMapMemory( //
+    if(auto code = vkMapMemory(
            target.device, target.memory, target.offset, source.size(), 0,
            &mapped);
        code != VK_SUCCESS) {
