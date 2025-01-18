@@ -1,4 +1,4 @@
-// Copyright Nezametdinov E. Ildus 2024.
+// Copyright Nezametdinov E. Ildus 2025.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // https://www.boost.org/LICENSE_1_0.txt)
@@ -11,7 +11,7 @@ export module rose.vulkan.kernel;
 
 ////////////////////////////////////////////////////////////////////////////////
 //
-// 1. General utilities.
+// General utilities.
 //
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -45,7 +45,7 @@ data(std::span<T, N> x) noexcept {
 
 ////////////////////////////////////////////////////////////////////////////////
 //
-// 2. Vulkan object.
+// Vulkan object.
 //
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -105,7 +105,7 @@ struct object {
 
 ////////////////////////////////////////////////////////////////////////////////
 //
-// 3. Vulkan resource.
+// Vulkan resource.
 //
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -210,8 +210,8 @@ template <typename Resource, typename Info>
 auto
 initialize(
     resource_initializer<Resource, Info> initializer,
-    resource_parent<Resource> parent, Info info) noexcept
-    -> std::expected<Resource, error> {
+    resource_parent<Resource> parent,
+    Info info) noexcept -> std::expected<Resource, error> {
     auto result = Resource{parent};
     if(auto code = initializer(parent, &info, nullptr, &result.handle);
        code == VK_SUCCESS) {
@@ -225,7 +225,7 @@ initialize(
 
 ////////////////////////////////////////////////////////////////////////////////
 //
-// 4. Vulkan instance.
+// Vulkan instance.
 //
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -235,9 +235,7 @@ export namespace rose::vulkan {
 // Vulkan instance definition.
 ////////////////////////////////////////////////////////////////////////////////
 
-struct instance : object<VkInstance, vkDestroyInstance> {
-    using object::object;
-};
+using instance = object<VkInstance, vkDestroyInstance>;
 
 ////////////////////////////////////////////////////////////////////////////////
 // Vulkan instance initialization parameters definition.
@@ -285,7 +283,7 @@ initialize(instance_parameters parameters) noexcept
 
 ////////////////////////////////////////////////////////////////////////////////
 //
-// 5. Vulkan physical device.
+// Vulkan physical device.
 //
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -302,7 +300,7 @@ struct physical_device_features {
 
     physical_device_features(VkPhysicalDevice device) noexcept
         : vulkan_1_1{}, vulkan_1_2{}, vulkan_1_3{}, common{} {
-        if(this->link_structures(); device != nullptr) {
+        if(this->link_structures_(); device != nullptr) {
             vkGetPhysicalDeviceFeatures2(device, &(this->common));
         }
     }
@@ -312,7 +310,7 @@ struct physical_device_features {
         , vulkan_1_2{other.vulkan_1_2}
         , vulkan_1_3{other.vulkan_1_3}
         , common{other.common} {
-        this->link_structures();
+        this->link_structures_();
     }
 
     physical_device_features(physical_device_features&&) = delete;
@@ -328,7 +326,7 @@ struct physical_device_features {
         this->vulkan_1_2 = other.vulkan_1_2;
         this->vulkan_1_3 = other.vulkan_1_3;
         this->common = other.common;
-        return (this->link_structures(), *this);
+        return (this->link_structures_(), *this);
     }
 
     auto
@@ -350,7 +348,7 @@ private:
     ////////////////////////////////////////////////////////////////////////////
 
     void
-    link_structures() noexcept {
+    link_structures_() noexcept {
         // Set structure types.
         this->vulkan_1_1.sType =
             VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_1_FEATURES;
@@ -462,9 +460,8 @@ select(VkInstance instance, physical_device_preference preference) noexcept
             }
         }
 
-        // A suitable device has been found.
+        // Obtain device's memory properties and return the device.
         if(auto result = physical_device{.handle = device}; true) {
-            // Obtain its memory properties, and return it.
             vkGetPhysicalDeviceMemoryProperties(
                 result, &(result.memory_properties));
 
@@ -479,7 +476,7 @@ select(VkInstance instance, physical_device_preference preference) noexcept
 
 ////////////////////////////////////////////////////////////////////////////////
 //
-// 6. Vulkan device resources.
+// Vulkan device resources.
 //
 ////////////////////////////////////////////////////////////////////////////////
 
